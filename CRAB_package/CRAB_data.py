@@ -29,7 +29,7 @@ class CRdata:
         for (name, element), group in df.groupby(['exp_name','element'],sort=False):
             data = group
             unit = data.iloc[0,4]
-            f_unit = data['flux_unit'][0]
+            f_unit = data['flux_unit'].iloc[0]
             data = data.iloc[:,0:3]
             data_objs.append(CRdata(element, name, data, unit, f_unit, widths))
             
