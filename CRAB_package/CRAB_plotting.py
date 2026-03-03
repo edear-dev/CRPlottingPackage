@@ -37,9 +37,9 @@ class CRplotter:
         for obj in CRdata:
             labels.append(obj.exp_name + ' ' + obj.element)
         plot = CRplotter(CRdata, dtype, labels=labels)
-        plot.setUp()
         plot.singlePlot()
-        plot.spruceitUp(title='Flux vs' + dtype, xval=dtype, xunit=plot.unit, yunit=plot.flux_unit)
+        plot.setUp()
+        plot.spruceitUp(title='Flux vs ' + dtype, xval=dtype, xunit=plot.unit, yunit=plot.flux_unit)
 
     def setUp(self, xlog:bool=True, ylog:bool=True, xbounds:tuple=None, ybounds:tuple=None):
         ax = self.axes
@@ -142,7 +142,7 @@ class CRplotter:
         if yunit.strip() == '[(s m^2 sr GeV)^-1]':
             yunit = 'GeV'
         # generate ylabel 
-        base = rf"Φ ({yarea_unit}$^{{-2}}$s$^{{-1}}$sr$^{{-1}}${yunit}"
+        base = rf"Φ ({yarea_unit}$^{{-2}}$s$^{{-1}}$sr$^{{-1}}${yunit}$^{{-1}}$)"
         if power == 0:
             ylabel = base
         else:
