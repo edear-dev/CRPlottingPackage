@@ -28,6 +28,7 @@ class CRdata:
         # group by name and experiment
         for (name, element), group in df.groupby(['exp_name','element'],sort=False):
             data = group
+            # iloc necessary
             unit = data.iloc[0,3]
             f_unit = data['flux_unit'].iloc[0]
             data = data.iloc[:,0:3]
