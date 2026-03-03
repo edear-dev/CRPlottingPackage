@@ -1,30 +1,45 @@
+import base64
 import matplotlib.pyplot as plt
 import numpy as np
 
 from .CRAB_data import CRdata
 
 class CRplotter:
-    def __init__(self, CRdatasets:list[CRdata], labels:list[str]=None, rows=1, columns=1, sharex:bool=True):
+    def __init__(self, CRdatasets:list[CRdata], dtype:str, labels:list[str]=None, rows=1, columns=1, sharex:bool=True):
         if not isinstance(CRdatasets, list):
             raise ValueError('Please input the data as a list dude!!!')
         self.CRsets = CRdatasets
         datasets = []
+        units = set()
+        flux_units = set()
         for dset in self.CRsets:
             datasets.append(dset.data)
+            units.add(dset.unit)
+            flux_units.add(dset.flux_unit)
+        if len(units) == 1:
+            self.unit = units[0]
+        else:
+            raise ValueError('All units should match')
+        if len(flux_units) == 1:
+            self.flux_unit = flux_units[0]
+        else:
+            raise ValueError('All flux units should match')
         self.datasets = datasets 
+        self.dtype = dtype
         self.labels = labels or [None] * len(datasets)
         self.rows = rows
         self.columns = columns
         self.fig, self.axes = plt.subplots(self.rows, self.columns, sharex=sharex)
 
     @classmethod
-    def default_plot(cls, CRdata:list):
+    def default_plot(cls, CRdata:list, dtype:str):
         labels = []
         for obj in CRdata:
             labels.append(obj.exp_name + ' ' + obj.element)
-        plot = CRplotter(CRdata, labels=labels)
+        plot = CRplotter(CRdata, dtype, labels=labels)
         plot.setUp()
         plot.singlePlot()
+        plot.spruceitUp(title='Flux vs' + dtype, )
 
     def setUp(self, xlog:bool=True, ylog:bool=True, xbounds:tuple=None, ybounds:tuple=None):
         ax = self.axes
@@ -96,7 +111,7 @@ class CRplotter:
         if any(self.labels):
             ax.legend()
         ax.set_title(title, fontweight='bold', fontsize=15)
-        xlabel, ylabel = CRplotter.createLabels(xval, xunit, ylabel, yunit, yarea_unit, power)
+        xlabel, ylabel = CRplotter.createLabels(xval, xunit, yunit, yarea_unit, power)
         ax.set_xlabel(xlabel, fontweight='bold', fontsize=12)
         ax.set_ylabel(ylabel, fontweight='bold', fontsize=12)
         if right:
@@ -112,7 +127,7 @@ class CRplotter:
             if right:
                 ax.yaxis.tick_right()
                 ax.yaxis.set_label_position("right")
-        xlabel, ylabel = CRplotter.createLabels(xval, xunit, ylabel, yunit, yarea_unit, power)
+        xlabel, ylabel = CRplotter.createLabels(xval, xunit, yunit, yarea_unit, power)
         self.fig.supxlabel(xlabel, fontweight='bold', fontsize=12)
         self.fig.supylabel(ylabel, fontweight='bold', fontsize=12)
         self.fig.tight_layout()
@@ -121,22 +136,20 @@ class CRplotter:
             CRplotter.savePlot(title)
     
     @staticmethod
-    def createLabels(xval, xunit, ylabel, yunit, yarea_unit, power):
-        if xval not in {"rigidity", "energy"}:
-            raise ValueError("xval must be 'rigidity' or 'energy'")
-        quantity = {"rigidity": "V", "energy": "eV/n"}[xval]
-        xlabel = f"{xval.capitalize()} ({xunit}{quantity})"
+    def createLabels(xval, xunit, yunit, yarea_unit, power):
+        xlabel = xval + f' ({xunit})'
 
-        # generate ylabel if none given
-        if ylabel is None:
-            base = rf"Φ ({yarea_unit}$^{{-2}}$s$^{{-1}}$sr$^{{-1}}${yunit}"
-            if power == 0:
-                ylabel = rf"{base}{quantity})"
-            else:
-                ylabel = (
-                    rf"Φ {xval[0].upper()}$^{{{power}}}$"
-                    rf"({yarea_unit}$^{{-2}}$s$^{{-1}}$sr$^{{-1}}${yunit}"
-                    rf"{quantity}$^{{{round(power-1,2)}}}$)"
+        if yunit.strip() == '[(s m^2 sr GeV)^-1]':
+            yunit = 'GeV'
+        # generate ylabel 
+        base = rf"Φ ({yarea_unit}$^{{-2}}$s$^{{-1}}$sr$^{{-1}}${yunit}"
+        if power == 0:
+            ylabel = base
+        else:
+            ylabel = (
+                rf"Φ {xval[0].upper()}$^{{{power}}}$"
+                rf"({yarea_unit}$^{{-2}}$s$^{{-1}}$sr$^{{-1}}${yunit}"
+                rf"$^{{{round(power-1,2)}}}$)"
                 )
         return xlabel, ylabel
     

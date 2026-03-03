@@ -11,6 +11,8 @@ class CRdata:
         self.element = element
         self.exp_name = exp
         self.data = df.to_numpy(float)
+        self.unit = unit
+        self.flux_unit = flux_unit
         self.widths = widths
     
     @classmethod
