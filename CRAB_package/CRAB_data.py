@@ -289,7 +289,7 @@ class CRdata:
         self.data = data
 
     def __str__(self):
-        return self.element + ', ' + self.exp_name + '\n' + self.df.to_string()
+        return self.element + ', ' + self.exp_name + '\n' + self.data.__str__()
     
     def __repr__(self):
-        return f'CRdata({self.element},{self.exp_name},{self.df})'
+        return f'CRdata({self.element},{self.exp_name},{self.data})'
