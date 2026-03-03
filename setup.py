@@ -8,10 +8,10 @@ setup(
     # List any other libraries your package needs to run
     # (Example: if you use numpy or pandas, list them here)
     install_requires=[
-        'numpy',
-        'pandas',
-        'matplotlib',
-        'scipy',
-        'typing'
+        # 'numpy',
+        # 'pandas',
+        # 'matplotlib',
+        # 'scipy',
+        # 'typing'
     ],
 )
