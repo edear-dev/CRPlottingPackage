@@ -10,7 +10,7 @@ class CRdata:
     def __init__(self, element: str, exp: str, df: pd.DataFrame, unit:str, flux_unit:str, widths:list):
         self.element = element
         self.exp_name = exp
-        self.data = df
+        self.data = df.to_numpy(float)
         self.widths = widths
     
     @classmethod
