@@ -39,7 +39,7 @@ class CRplotter:
         plot = CRplotter(CRdata, dtype, labels=labels)
         plot.setUp()
         plot.singlePlot()
-        plot.spruceitUp(title='Flux vs' + dtype, )
+        plot.spruceitUp(title='Flux vs' + dtype, xval=dtype, xunit=plot.unit, yunit=plot.flux_unit)
 
     def setUp(self, xlog:bool=True, ylog:bool=True, xbounds:tuple=None, ybounds:tuple=None):
         ax = self.axes
