@@ -18,7 +18,7 @@ class CRplotter:
         self.fig, self.axes = plt.subplots(self.rows, self.columns, sharex=sharex)
 
     @classmethod
-    def default_plot(CRdata:list):
+    def default_plot(cls, CRdata:list):
         labels = []
         for obj in CRdata:
             labels.append(obj.exp_name + ' ' + obj.element)
