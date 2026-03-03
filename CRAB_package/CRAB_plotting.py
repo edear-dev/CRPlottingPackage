@@ -17,11 +17,11 @@ class CRplotter:
             units.add(dset.unit)
             flux_units.add(dset.flux_unit)
         if len(units) == 1:
-            self.unit = units[0]
+            self.unit = units.pop()
         else:
             raise ValueError('All units should match')
         if len(flux_units) == 1:
-            self.flux_unit = flux_units[0]
+            self.flux_unit = flux_units.pop()
         else:
             raise ValueError('All flux units should match')
         self.datasets = datasets 
