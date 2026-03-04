@@ -21,9 +21,13 @@ class CRdata:
 
         # bin widths as list
         widths = list(df.iloc[:,3:5].values.astype(float))
+        widths = [None if -9999 in w else w for w in widths]
         df.drop(df.columns[3:5], axis=1, inplace=True)
         # order as E/R, Flux, Error, Unit, Flux_unit, name, element
         df = df.iloc[:, [2,4,5,3,6,0,1]]
+
+        # handle -9999 values
+        df['error'] = df['error'].replace(-9999, np.nan)
 
         # group by name and experiment
         for (name, element), group in df.groupby(['exp_name','element'],sort=False):
